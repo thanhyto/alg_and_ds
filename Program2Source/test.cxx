@@ -18,6 +18,7 @@ int main(int argc, char** argv) {
     nlohmann::json jsonOutput;
     // Use the same metadata of the sample file
     jsonOutput["metadata"] = data["metadata"];
+    // vector<int> sortSample = data["Sample1"].get<vector<int>>();
     // Get the size of the array and the number of samples
     int arrSize = data["metadata"]["arraySize"]; // size of the array
     int numSamp = data["metadata"]["numSamples"]; // number of samples
@@ -30,23 +31,22 @@ int main(int argc, char** argv) {
             sampleName.push_back(it.key());
     }
     for(int i = 0; i < numSamp; i++){
-        if(inversion != 0)
-            invCount += 1;
-        inversion = 0;
-        int min = data[sampleName[i]][0];
-
         for(int j = 0; j < arrSize; j++){
-            if(data[sampleName[i]][j] < min)
-                cout << min << " " << data[sampleName[i]][j] << endl;
-                min = data[sampleName[i]][j];
-                inversion +=1;
-                jsonOutput[sampleName[i]] = "ConsecutiveInversions";
-                // jsonOutput[sampleName[i]]["ConsecutiveInversions"][to_string(inversion)]= {min, data[sampleName[i]][j]};
-
+            if( data[sampleName[i]][j] > data[sampleName[i]][j+1]){
+                jsonOutput[sampleName[i]]["ConsecutiveInversions"][to_string(j)]={data[sampleName[i]][j],data[sampleName[i]][j+1]};
+                cout << data[sampleName[i]][j] << " " << data[sampleName[i]][j+1] << endl;
+                inversion += 1;
+            }
         }
-        
+
+        if(inversion != 0){
+            vector<int> sortSample = data["Sample1"].get<vector<int>>();
+            invCount +=1;
+            inversion = 0;
+        }
     }
 
+    
     jsonOutput["metadata"]["samplesWithInversions"] = invCount;
     cout << jsonOutput << endl;
     return 1;
