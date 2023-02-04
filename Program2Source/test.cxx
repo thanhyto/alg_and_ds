@@ -36,11 +36,11 @@ int main(int argc, char** argv) {
                 jsonOutput[sampleName[i]]["ConsecutiveInversions"][to_string(j)]={data[sampleName[i]][j],data[sampleName[i]][j+1]};
                 cout << data[sampleName[i]][j] << " " << data[sampleName[i]][j+1] << endl;
                 inversion += 1;
+                jsonOutput[sampleName[i]]["sample"] = data[sampleName[i]];
             }
         }
 
         if(inversion != 0){
-            vector<int> sortSample = data["Sample1"].get<vector<int>>();
             invCount +=1;
             inversion = 0;
         }
